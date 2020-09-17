@@ -2,35 +2,37 @@ import React from "react";
 import ToyCard from "../components/ToyCard";
 import ToyForm from "../components/ToyForm";
 import ToySearch from "../components/ToySearch";
-
+import { connect } from "react-redux";
+import { fetchToys } from "../actions/toyActions";
 
 // Class components will always rerender when state or props change
 class ToysContainer extends React.Component {
   state = {
-    toys: [],
     search: "",
   };
 
   componentDidMount() {
-    fetch("http://localhost:3000/toys")
-      .then((res) => res.json())
-      .then((data) => this.setState({toys: data}));
+    console.log("FIRST")
+    this.props.fetchToys();
+    console.log("FOURTH")
   }
 
-
   renderToyCards() {
+    if (this.props.loading) {
+      return <h2>LOADING TOYS....</h2>;
+    }
 
     let displayedToys;
     if (this.state.search) {
-      displayedToys = this.state.toys.filter((toy) =>
+      displayedToys = this.props.toys.filter((toy) =>
         toy.name.toLowerCase().includes(this.state.search.toLowerCase())
       );
     } else {
-      displayedToys = this.state.toys;
+      displayedToys = this.props.toys;
     }
 
     return displayedToys.map((toy) => {
-      return <ToyCard key={toy.id} toy={toy}  />;
+      return <ToyCard key={toy.id} toy={toy} />;
     });
   }
 
@@ -56,6 +58,8 @@ class ToysContainer extends React.Component {
   }
 }
 
+const mSTP = (state) => {
+  return state;
+};
 
-
-export default ToysContainer;
+export default connect(mSTP, { fetchToys })(ToysContainer);
