@@ -1,6 +1,6 @@
-import React from 'react';
-import './App.css';
-import ToysContainer from './ToysContainer'
+import React from "react";
+import "./App.css";
+import ToysContainer from "./containers/ToysContainer";
 
 function App() {
   return (
