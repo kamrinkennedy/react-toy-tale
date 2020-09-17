@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { createToy } from "../actions/toyActions";
+import { addToy } from "../actions/toyActions";
 
 function ToyForm(props) {
   const [name, setName] = useState("");
@@ -14,7 +14,18 @@ function ToyForm(props) {
       likes: 0,
     };
 
-    props.createToy(toy)
+    const configObj = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(toy),
+    };
+
+    fetch("http://localhost:3000/toys", configObj)
+      .then((res) => res.json())
+      .then((newToy) => props.addToy(newToy));
     // reset the form
     setName("");
     setImage("");
@@ -43,4 +54,4 @@ function ToyForm(props) {
   );
 }
 
-export default connect(null, { createToy })(ToyForm);
+export default connect(null, { addToy })(ToyForm);

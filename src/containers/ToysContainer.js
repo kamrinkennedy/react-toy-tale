@@ -2,35 +2,35 @@ import React from "react";
 import ToyCard from "../components/ToyCard";
 import ToyForm from "../components/ToyForm";
 import ToySearch from "../components/ToySearch";
-import { connect } from "react-redux";
-import { fetchToys, addLike } from "../actions/toyActions";
+
 
 // Class components will always rerender when state or props change
 class ToysContainer extends React.Component {
   state = {
+    toys: [],
     search: "",
   };
 
   componentDidMount() {
-    this.props.fetchToys();
+    fetch("http://localhost:3000/toys")
+      .then((res) => res.json())
+      .then((data) => this.setState({toys: data}));
   }
 
+
   renderToyCards() {
-    if (this.props.loading) {
-      return <h2>LOADING TOYS...</h2>;
-    }
 
     let displayedToys;
     if (this.state.search) {
-      displayedToys = this.props.toys.filter((toy) =>
+      displayedToys = this.state.toys.filter((toy) =>
         toy.name.toLowerCase().includes(this.state.search.toLowerCase())
       );
     } else {
-      displayedToys = this.props.toys;
+      displayedToys = this.state.toys;
     }
 
     return displayedToys.map((toy) => {
-      return <ToyCard key={toy.id} toy={toy} addLike={this.props.addLike} />;
+      return <ToyCard key={toy.id} toy={toy}  />;
     });
   }
 
@@ -56,9 +56,6 @@ class ToysContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log("state", state);
-  return state;
-};
 
-export default connect(mapStateToProps, { fetchToys, addLike })(ToysContainer);
+
+export default ToysContainer;
